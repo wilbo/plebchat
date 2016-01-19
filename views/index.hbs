@@ -20,10 +20,19 @@
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
+        <div id="users-online">
+            <p>users online: </p>
+            <ul id="user-list"></ul>
+        </div>
+        
+        <hr>
+
         <div id="messages"></div>
         <form action="" id="message-form">
           <input id="message-input" autocomplete="off"><button>Send</button>
         </form>
+
+
 
         <div class="overlay">
             <div id="connect">
@@ -31,6 +40,7 @@
                     <p>what is your name?</p>
                     <input id="name-input" autocomplete="off" />
                     <button>Connect</button>
+                    <div id="name-error"></div>
                 </form> 
             </div>
         </div>
