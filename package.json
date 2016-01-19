@@ -3,10 +3,16 @@
   "version": "0.0.1",
   "description": "chat with plebs, why not?",
   "dependencies": {
+    "dateformat": "^1.0.12",
     "express": "^4.13.3",
+    "gulp": "^3.9.0",
+    "gulp-sass": "^2.1.1",
+    "hbs": "^4.0.0",
+    "path": "^0.12.7",
     "socket.io": "^1.4.4"
   },
   "devDependencies": {
-    "dateformat": "^1.0.12"
+    "gulp-autoprefixer": "^3.1.0",
+    "gulp-sourcemaps": "^1.6.0"
   }
 }

@@ -1,14 +1,24 @@
 var express = require('express');
-var app = express();
-
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
+var path = require('path');
+var hbs = require('hbs');
 var dateFormat = require('dateformat');
 
+// create the app
+var app = express();
+
+// start server and intertwine socket io
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+
+// for hbs templating
+hbs.localsAsTemplateData(app);
 app.set('views', './views');
 app.set('view engine', 'hbs');
+hbs.registerPartials(__dirname + '/views');
 
-app.use(express.static('public'));
+
+// the public folder
+app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.get('/', function (req, res) {
@@ -16,7 +26,6 @@ app.get('/', function (req, res) {
   	title: 'Plebchat'
   });
 });
-
 
 /*
 	Socket io stuff
@@ -29,7 +38,6 @@ io.on('connection', function(socket) {
 
 	// join request
   socket.on('join', function(name) {
-  	console.log('join request fired!');
 
   	if (name == '') {
   		// if no name was provided
@@ -53,8 +61,6 @@ io.on('connection', function(socket) {
   	//console.log(users);
    
   });
-
-
 
 	// chat message
   socket.on('messageRequest', function(msg) {
@@ -117,8 +123,6 @@ function usernameTaken(obj, val) {
 
 
 
-
-
 function logArray(array) {
 	console.log('in array:');
 	for(var i = 0; i < array.length; i++) {
@@ -133,6 +137,6 @@ app.use(function(req, res, next) {
   next();
 });
 
-http.listen(3000, function() {
+server.listen(3000, function() {
   console.log('listening on *:3000');
 });
