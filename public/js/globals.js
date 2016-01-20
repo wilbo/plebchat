@@ -6,6 +6,7 @@ $(document).ready(function() {
 
   // focus automagically
   $('#name-input').focus();
+  $('#wrapper').hide();
 
   /*
     Requests
@@ -34,21 +35,21 @@ $(document).ready(function() {
 
   // username error
   socket.on('usernameError', function(errorMessage) {
-      $('#name-error').empty();
-      $('#name-error').append(errorMessage);
+      $('#name-error').html(errorMessage);
   });
 
   // when connected
   socket.on('joined', function(username) {
     $('.name-box-window').fadeOut(200).remove();
-    $('#message-input').focus();
     var output = '<div class="message-box"><div class="message joined">' + username + ' joined.</div></div>';
     $('#messages').append(output);
+    $('#message-input').focus();
+    $('#wrapper').show().addClass('slide-in');
   });
 
   // append message
   socket.on('messageResponse', function(data) {
-    output = '<div class="message-box"><div class="username">' + data.username + '</div><div class="time"><small>-' + data.timestamp + '</small></div><div class="message">' + data.message + '</div></div>';
+    output = '<div class="message-box"><div class="username">' + data.username + ' </div><div class="time"><small> ' + data.timestamp + '</small></div><div class="message">' + data.message + '</div></div>';
     $('#messages').append(output);
     updateScroll();
   });
@@ -56,9 +57,12 @@ $(document).ready(function() {
   // update userlist
   socket.on('updateUserList', function(users) {
     $("#user-list").empty();
+    var userAmount = 0;
     $.each(users, function(id, username) {
         $('#user-list').append('<li class="user" id="' + username + '"><i class="fa fa-user"></i> ' + username + '</li>');
+        userAmount++;
     });
+    $('#amount-in-chat').html('<p><i class="fa fa-user"></i> ' + userAmount + '</p>');
   });
 
   // when disconnectes

@@ -7,7 +7,7 @@
 $main: #FFD000;
 $main-hover: darken($main, 5%);
 $white: #fff;
-$background: #f5f5f5;
+$background: #ededed;
 $text: #47525D;
 $gray: #D9DDE2;
 $light-gray: lighten($gray, 10%);
@@ -32,7 +32,9 @@ body {
 	font-family: 'Open Sans', Arial, Sans-serif; 
 	font-size: 14px;
 	color: $text;
-	background-color: $background;
+	background-image: url(/img/backdrop.jpg);
+	background-position: center;
+	background-size: cover;
 }
 
 a, a:active, a:visited {
@@ -74,7 +76,6 @@ blockquote {
 	border: none;
 	border-radius: $border-radius;
 	color: $main;
-	transition: $transition;
 	&:hover {
 		color: $main-hover;
 	  // background-color: $main;
@@ -82,11 +83,13 @@ blockquote {
 }
 
 #wrapper {
-	background-color: #e6e6e6;
+	background-color: $background;
 	width: 100%;
 	height: 100%;
 	position: relative;
 	overflow: hidden;
+	border-radius: $border-radius;
+	box-shadow: $shadow;
 	&:after {
 		content: "";
 	  display: table;
@@ -104,6 +107,7 @@ blockquote {
 	color: $white;
 	padding: 3px;
 	background-color: $main;
+	border-radius: $border-radius;
 	box-shadow: $shadow;
 	#header-svg {
 		display: inline-block;
@@ -111,6 +115,14 @@ blockquote {
 		padding: 5px 0 0 12px;
 		svg {
 			fill: $white;
+		}
+	}
+	#amount-in-chat {
+		float: right;
+		margin: 8px 20px 0 0;
+		font-size: 150%;
+		i {
+
 		}
 	}
 }
@@ -128,9 +140,11 @@ blockquote {
 		margin: 3px 3px 0 3px;
 		padding: 3px 10px;
 		background-color: $white;
+		box-shadow: $shadow;
 		.username {
 			display: inline-block;
 			font-weight: bold;
+			margin-right: 5px;
 		}
 		.time {
 			display: inline-block;
@@ -263,12 +277,28 @@ blockquote {
 @media screen and (min-width: 550px) {
 	
 	body {
-		padding-top: 75px;
+		padding-top: 0;
 	}
 
 	#wrapper {
 		margin: 0 auto;
+		position: relative;
+		top: 50%;
+		transform: translateY(-50%);
 		max-width: 400px;
-		height: 600px;
+		max-height: 600px;
 	}
+
+	#wrapper.slide-in {
+		animation-duration: 0.75s;
+  	animation-name: slidein;
+  	animation-timing-function: ease;
+	}
+
+	@keyframes slidein {
+    0%   {top: 200%;}
+    60%  {top: 45%;}
+    100% {top: 50%;}
+	}
+
 }

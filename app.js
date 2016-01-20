@@ -36,26 +36,36 @@ var users = {};
 
 io.on('connection', function(socket) {
 
+
+
 	// join request
   socket.on('join', function(name) {
 
+  	//console.log(socket.client);
+
+  	var socketId = socket.id;
+
+  	// username validation
   	if (name == '') {
-  		// if no name was provided
-  		io.emit('usernameError', 'please submit a username');
-  		//return false;
+  		io.to(socketId).emit('usernameError', 'please submit a username');
+  	} else if (name.length > 16) {
+  		io.to(socketId).emit('usernameError', 'The username you provided is too long.');
   	} else if (containsSymbol(name)) {
-  		// if name contains wrong characters
-  		io.emit('usernameError', 'Your username may only contain letters and numbers.');
-  		//return false;
+  		io.to(socketId).emit('usernameError', 'Your username may only contain letters and numbers.');
   	} else if (usernameTaken(users, name)) {
-  		// if name already taken
-  		io.emit('usernameError', 'username is already taken.');
-  		//return false;
+  		io.to(socketId).emit('usernameError', 'username is already taken.');
   	} else {
-  		// of everything is cool
-  		users[socket.id] = name;
-    	io.emit('joined', name);
+  		// if everything is cool
+
+  		// store the user
+  		users[socketId] = name;
+  		// let user join
+    	io.to(socketId).emit('joined', name);
+    	// update total connected users
     	io.emit("updateUserList", users);
+
+    	console.log('added:');
+    	console.log(users);
   	}
   	
   	//console.log(users);
@@ -84,9 +94,12 @@ io.on('connection', function(socket) {
   		io.emit('left', currentUser);
 	    delete users[socket.id];
 	    io.emit("updateUserList", users);
-  	}
-  });
 
+	    console.log('deleted:');
+    	console.log(users);
+  	}
+  	
+  });
 
  
 });
