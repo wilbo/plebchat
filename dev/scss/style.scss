@@ -32,9 +32,6 @@ body {
 	font-family: 'Open Sans', Arial, Sans-serif; 
 	font-size: 14px;
 	color: $text;
-	background-image: url(/img/backdrop.jpg);
-	background-position: center;
-	background-size: cover;
 }
 
 a, a:active, a:visited {
@@ -69,6 +66,14 @@ blockquote {
 
 // utilities
 
+.clearfix:after {
+   content: " "; /* Older browser do not support empty content */
+   visibility: hidden;
+   display: block;
+   height: 0;
+   clear: both;
+}
+
 .button {
 	display: inline-block;
 	background-color: transparent;
@@ -90,6 +95,7 @@ blockquote {
 	overflow: hidden;
 	border-radius: $border-radius;
 	box-shadow: $shadow;
+	z-index: 50;
 	&:after {
 		content: "";
 	  display: table;
@@ -134,13 +140,39 @@ blockquote {
  */
 
 #messages {
-	max-height: 494px;
+	position: absolute;
+	top: 58px;
+	bottom: 51px;
+	width: 100%;
 	overflow: scroll;
 	.message-box {
-		margin: 3px 3px 0 3px;
-		padding: 3px 10px;
-		background-color: $white;
-		box-shadow: $shadow;
+		width: 100%;
+		&:first-of-type {
+			margin-top: 0;
+		}
+		.right-side, .left-side {
+			margin: 3px 3px 0 3px;
+			padding: 3px 10px;
+			display: inline-block;
+			max-width: 300px;
+			height: 100%;
+			box-shadow: $shadow;
+			border-radius: $border-radius;
+			background-color: $white;
+			overflow: hidden;
+		}
+		.right-side {
+			float: right;
+			.time {
+				float: right;
+			}
+		}
+		.left-side {
+			float: left;
+			.time {
+				float: none;
+			}
+		}
 		.username {
 			display: inline-block;
 			font-weight: bold;
@@ -273,11 +305,34 @@ blockquote {
 	}
 }
 
+/* 
+
+	MADE BY
+
+ */
+
+#made-by {
+	display: none;
+	padding: 3px;
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	text-align: center;
+	p {
+			color: #fff;
+			font-weight: 100;
+			font-size: 75%;
+	}
+}
+
 
 @media screen and (min-width: 550px) {
 	
 	body {
 		padding-top: 0;
+		background-image: url(/img/view-sharp.jpg);
+		background-position: center;
+		background-size: cover;
 	}
 
 	#wrapper {
@@ -300,5 +355,14 @@ blockquote {
     60%  {top: 45%;}
     100% {top: 50%;}
 	}
+
+	#messages {
+		max-height: 494px;
+	}
+
+	#made-by {
+		display: block;
+	}
+
 
 }
