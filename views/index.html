@@ -7,6 +7,7 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
+        <link rel="shortcut icon" href="/img/favicon.ico" type="image/png" />
         <link rel="apple-touch-icon" href="#">
         <!-- Place favicon.ico in the root directory -->
         <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,300' rel='stylesheet' type='text/css'>
@@ -122,9 +123,6 @@
             <!-- messages -->
             <section id="middle">
                 <div id="messages">
-
-                <div class="message-box">
-                    <div class="message">Welcome to the chat! share the url to talk with people.</div>
                     <!-- messages wil append here -->
                 </div>
             </section>
@@ -140,6 +138,10 @@
                 </div>
             </section>
 
+        </div> <!-- /#wrapper -->
+
+        <div id="made-by">
+            <p>Made with <a href="https://nodejs.org/">node.js</a>, <a href="http://expressjs.com/">express</a> and <a href="http://socket.io/">socket.io</a> by <a href="http://wilbo.io/">Wilbert Schepenaar</a></p>
         </div>
 
         <!-- username popup -->
@@ -236,12 +238,12 @@
                     </div>
                     <div id="disclaimer">
                         <h5>Disclaimer:</h5>
-                        <p>This is a practice project of mine that got a little out of hand. Chances are that nobody is online. Share this link</p><blockquote>http://localhost:333</blockquote><p>with someone to give it a proper test. Any feedback is appreciated so you're welcome to hit me up at <a href="mailto:hello@wilbo.io">hello@wilbo.io</a></p>
+                        <p>This is a practice project of mine that got a little out of hand. Chances are that nobody is online. Share this link</p><blockquote>plebchat.wilbo.io</blockquote><p>with someone to give it a proper test. Any feedback is appreciated so you're welcome to hit me up at <a href="mailto:hello@wilbo.io">hello@wilbo.io</a></p>
                         <br>
                         <h5>Have fun!</h5>
                     </div>
                 <form action="" id="name-form">
-                    <input type="text" id="name-input" autocomplete="off" placeholder="pick a username" />
+                    <input type="text" id="name-input" autocomplete="off" maxlength="17" placeholder="pick a username" />
                     <button type="submit" class="button">Start</button>
                     <div id="name-error"></div>
                 </form> 

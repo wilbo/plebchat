@@ -4,6 +4,10 @@ $(document).ready(function() {
 
   var socket = io();
 
+  if (!localUsername) {
+    var localUsername;
+  }
+
   // focus automagically
   $('#name-input').focus();
   $('#wrapper').hide();
@@ -20,12 +24,26 @@ $(document).ready(function() {
     return false;
   });
 
+
   // request to post a message
   $('#message-form').submit(function(e) {
     e.preventDefault();
     var message = $('#message-input').val();
-    socket.emit('messageRequest', message);
-    $('#message-input').val('');
+
+    if (message != '') {
+        
+      socket.emit('messageRequest', message);
+
+      // append de message locally
+      var now = $.format.date(new Date(), 'H:mm');
+      output = '<div class="message-box clearfix"><div class="right-side"><div class="username">' + localUsername + '</div><div class="time"><small> ' + now + '</small></div><div class="message">' + message + '</div></div></div>';
+      $('#messages').append(output);
+      updateScroll();
+
+      $('#message-input').val('');
+
+    }
+
     return false;
   });
 
@@ -40,16 +58,18 @@ $(document).ready(function() {
 
   // when connected
   socket.on('joined', function(username) {
+     localUsername = username;
     $('.name-box-window').fadeOut(200).remove();
-    var output = '<div class="message-box"><div class="message joined">' + username + ' joined.</div></div>';
+    var output = '<div class="message-box clearfix"><div class="left-side"><div class="message joined">' + username + ' joined.</div></div></div>';
     $('#messages').append(output);
     $('#message-input').focus();
     $('#wrapper').show().addClass('slide-in');
   });
 
-  // append message
+  // append message others
   socket.on('messageResponse', function(data) {
-    output = '<div class="message-box"><div class="username">' + data.username + ' </div><div class="time"><small> ' + data.timestamp + '</small></div><div class="message">' + data.message + '</div></div>';
+    var now = $.format.date(new Date(), 'H:mm');
+    output = '<div class="message-box clearfix"><div class="left-side"><div class="username">' + data.username + ' </div><div class="time"><small> ' + now + '</small></div><div class="message">' + data.message + '</div></div></div>';
     $('#messages').append(output);
     updateScroll();
   });
@@ -67,7 +87,7 @@ $(document).ready(function() {
 
   // when disconnectes
   socket.on('left', function(username) {
-    output = '<div class="message-box"><div class="message left">' + username + ' has left.</div></div>';
+    output = '<div class="message-box clearfix"><div class="left-side"><div class="message left">' + username + ' has left.</div></div></div>';
     $('#messages').append(output);
   });
 

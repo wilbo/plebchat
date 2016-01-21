@@ -1,6 +1,5 @@
 var express = require('express');
 var path = require('path');
-//var hbs = require('hbs');
 var dateFormat = require('dateformat');
 
 // create the app
@@ -10,22 +9,26 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
-// for hbs templating
-// hbs.localsAsTemplateData(app);
+// templating
 app.set('views', __dirname + '/views');
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
-// app.set('view engine', 'html');
-// hbs.registerPartials(__dirname + '/views');
-
 
 // the public folder
 app.use(express.static(path.join(__dirname, 'public')));
 
 
+// the main 'page'
 app.get('/', function (req, res) {
   res.render('index.html');
 });
+
+// redirect al other urls than '/'
+app.use(redirectUnmatched);
+function redirectUnmatched(req, res) {
+  res.redirect("http://plebchat.wilbo.io/");
+}
+
 
 /*
 	Socket io stuff
@@ -76,11 +79,9 @@ io.on('connection', function(socket) {
   socket.on('messageRequest', function(msg) {
 
   	var currentUser = users[socket.id];
-  	var now = dateFormat(new Date(), "H:MM");
 
-    io.emit('messageResponse', {
+    socket.broadcast.emit('messageResponse', {
     	username: currentUser,
-    	timestamp: now,
     	message: msg
     });
 
