@@ -39,16 +39,12 @@ var users = {};
 
 io.on('connection', function(socket) {
 
-
-
-	// join request
-  socket.on('join', function(name) {
-
-  	//console.log(socket.client);
-
+  // on a join request
+  socket.on('joinRequest', function(name) {
+    // set data of this specific socket
   	var socketId = socket.id;
 
-  	// username validation
+  	// username validation. checks for empty, length, symbols, or if already taken.
   	if (name == '') {
   		io.to(socketId).emit('usernameError', 'please submit a username');
   	} else if (name.length > 16) {
@@ -58,42 +54,54 @@ io.on('connection', function(socket) {
   	} else if (usernameTaken(users, name)) {
   		io.to(socketId).emit('usernameError', 'username is already taken.');
   	} else {
-  		// if everything is cool
-
   		// store the user
   		users[socketId] = name;
-  		// let user join
-    	io.to(socketId).emit('joined', name);
-    	// update total connected users
+  		// send 'others' joined message
+    	socket.broadcast.emit('joinResponse', name);
+      // give user acces
+      io.to(socketId).emit('access');
+    	// globally update userlist
     	io.emit("updateUserList", users);
-
-  	}
-  	
-  	//console.log(users);
-   
+  	}   
   });
 
-	// chat message
+  // on a username value request
+  socket.on('usernameRequest', function() {
+    // set user data of this specific user/socket
+    var socketId = socket.id;
+    var currentUsername = users[socketId];
+
+    io.to(socketId).emit('usernameResponse', currentUsername);
+  });
+
+	// on a chat message
   socket.on('messageRequest', function(msg) {
+    // set user data of this specific user/socket
+    var socketId = socket.id;
+  	var currentUsername = users[socketId];
 
-  	var currentUser = users[socket.id];
-
+    // send 'others' the message .. the users own message gets appended locally
     socket.broadcast.emit('messageResponse', {
-    	username: currentUser,
+    	username: currentUsername,
     	message: msg
     });
 
   });
 
-  // disconnecting
+  // on disconnect
   socket.on('disconnect', function() {
-  	var currentUser = users[socket.id];
-  	// only if it was a joined user
-  	if (currentUser) {
-  		io.emit('left', currentUser);
-	    delete users[socket.id];
-	    io.emit("updateUserList", users);
+    // set user data of this specific user/socket
+    var socketId = socket.id;
+    var currentUsername = users[socketId];
 
+    // only if it was a joined user
+  	if (currentUsername) {
+      // globally send username that left 
+  		io.emit('left', currentUsername);
+      // remove user from storage
+      delete users[socketId];
+      // globally update userlist
+	    io.emit("updateUserList", users);
   	}
   	
   });
@@ -130,8 +138,6 @@ function usernameTaken(obj, val) {
 	}
 	return false;
 }
-
-
 
 function logArray(array) {
 	console.log('in array:');

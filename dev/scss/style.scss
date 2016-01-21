@@ -30,7 +30,7 @@ html {
 body { 
 	height: 100%;
 	font-family: 'Open Sans', Arial, Sans-serif; 
-	font-size: 14px;
+	font-size: 15px;
 	color: $text;
 }
 
@@ -97,7 +97,7 @@ blockquote {
 	box-shadow: $shadow;
 	z-index: 50;
 	&:after {
-		content: "";
+      content: "";
 	  display: table;
 	  clear: both;
 	}
@@ -147,11 +147,12 @@ blockquote {
 	overflow: scroll;
 	.message-box {
 		width: 100%;
+		margin-top: 3px;
 		&:first-of-type {
 			margin-top: 0;
 		}
 		.right-side, .left-side {
-			margin: 3px 3px 0 3px;
+			margin: 0 3px;
 			padding: 3px 10px;
 			display: inline-block;
 			max-width: 300px;
@@ -186,6 +187,12 @@ blockquote {
 		.message {}
 		.message.joined {
 		
+		}
+	}
+	.message-box.notice {
+		text-align: center;
+		.left-side {
+			float: none !important;
 		}
 	}
 	
@@ -339,21 +346,32 @@ blockquote {
 		margin: 0 auto;
 		position: relative;
 		top: 50%;
+		opacity: 0;
 		transform: translateY(-50%);
 		max-width: 400px;
 		max-height: 600px;
 	}
 
 	#wrapper.slide-in {
-		animation-duration: 0.75s;
+		animation-duration: 0.5s;
   	animation-name: slidein;
   	animation-timing-function: ease;
+  	opacity: 1 !important;
 	}
 
 	@keyframes slidein {
-    0%   {top: 200%;}
-    60%  {top: 45%;}
-    100% {top: 50%;}
+    0%   {
+    	top: 80%;
+    	opacity: 0;
+    }
+    70%  {
+    	top: 48%;
+    	
+    }
+    100% {
+    	top: 50%;
+    	opacity: 1;
+    }
 	}
 
 	#messages {
