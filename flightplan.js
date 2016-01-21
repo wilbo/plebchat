@@ -20,7 +20,7 @@ plan.target('production', [
   }
 ]);
  
-var tmpDir = 'example-com-' + new Date().getTime();
+var tmpDir = appName+'-' + new Date().getTime();
  
 // run commands on localhost 
 plan.local(function(local) {

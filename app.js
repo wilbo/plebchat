@@ -1,6 +1,6 @@
 var express = require('express');
 var path = require('path');
-var hbs = require('hbs');
+//var hbs = require('hbs');
 var dateFormat = require('dateformat');
 
 // create the app
@@ -11,10 +11,12 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
 // for hbs templating
-hbs.localsAsTemplateData(app);
-app.set('views', './views');
-app.set('view engine', 'hbs');
-hbs.registerPartials(__dirname + '/views');
+// hbs.localsAsTemplateData(app);
+app.set('views', __dirname + '/views');
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
+// app.set('view engine', 'html');
+// hbs.registerPartials(__dirname + '/views');
 
 
 // the public folder
@@ -22,9 +24,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.get('/', function (req, res) {
-  res.render('index', { 
-  	title: 'Plebchat'
-  });
+  res.render('index.html');
 });
 
 /*
