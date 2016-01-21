@@ -117,7 +117,7 @@ $(document).ready(function() {
 
     // update the amount of users connected
     var userAmount = Object.size(users);
-    $('#amount-in-chat').html('<p><i class="fa fa-user"></i> ' + userAmount + '</p>');
+    $('#amount-in-chat').html('<p>in chat: ' + userAmount + ' </p>');
   });
 
 
