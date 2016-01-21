@@ -67,8 +67,6 @@ io.on('connection', function(socket) {
     	// update total connected users
     	io.emit("updateUserList", users);
 
-    	console.log('added:');
-    	console.log(users);
   	}
   	
   	//console.log(users);
@@ -96,8 +94,6 @@ io.on('connection', function(socket) {
 	    delete users[socket.id];
 	    io.emit("updateUserList", users);
 
-	    console.log('deleted:');
-    	console.log(users);
   	}
   	
   });

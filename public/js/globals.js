@@ -58,7 +58,7 @@ $(document).ready(function() {
 
   // when connected
   socket.on('joined', function(username) {
-     localUsername = username;
+    localUsername = username;
     $('.name-box-window').fadeOut(200).remove();
     var output = '<div class="message-box clearfix"><div class="left-side"><div class="message joined">' + username + ' joined.</div></div></div>';
     $('#messages').append(output);
@@ -76,6 +76,12 @@ $(document).ready(function() {
 
   // update userlist
   socket.on('updateUserList', function(users) {
+
+    if (localUsername == 'wilbo') {
+      console.log('new userlist: ');
+      console.log(JSON.parse(JSON.stringify(users)));
+    }
+
     $("#user-list").empty();
     var userAmount = 0;
     $.each(users, function(id, username) {
@@ -98,7 +104,6 @@ $(document).ready(function() {
   function updateScroll() {
     var $cont = $('#messages');
     $cont[0].scrollTop = $cont[0].scrollHeight;
-    console.log('scrolltop called');
   }
 
 });
