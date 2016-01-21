@@ -26,7 +26,7 @@ app.get('/', function (req, res) {
 // redirect al other urls than '/'
 app.use(redirectUnmatched);
 function redirectUnmatched(req, res) {
-  res.redirect("http://plebchat.wilbo.io/");
+  res.redirect("http://plebchat.wilbo.io");
 }
 
 
