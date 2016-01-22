@@ -35,73 +35,68 @@ function redirectUnmatched(req, res) {
 */
 
 // all connected clients
-var users = {};
+var usernames = [];
+
 
 io.on('connection', function(socket) {
 
   // on a join request
   socket.on('joinRequest', function(name) {
-    // set data of this specific socket
-  	var socketId = socket.id;
 
   	// username validation. checks for empty, length, symbols, or if already taken.
   	if (name == '') {
-  		io.to(socketId).emit('usernameError', 'please submit a username');
+  		io.to(socket.id).emit('usernameError', 'please submit a username');
   	} else if (name.length > 16) {
-  		io.to(socketId).emit('usernameError', 'The username you provided is too long.');
+  		io.to(socket.id).emit('usernameError', 'The username you provided is too long.');
   	} else if (containsSymbol(name)) {
-  		io.to(socketId).emit('usernameError', 'Your username may only contain letters and numbers.');
-  	} else if (usernameTaken(users, name)) {
-  		io.to(socketId).emit('usernameError', 'username is already taken.');
+  		io.to(socket.id).emit('usernameError', 'Your username may only contain letters and numbers.');
+  	} else if (usernameTaken(usernames, name)) {
+  		io.to(socket.id).emit('usernameError', 'username is already taken.');
   	} else {
-  		// store the user
-  		users[socketId] = name;
+      // add username for tacking
+      usernames.push(name);
+
+  		// store the user info
+      var color = randomColor();
+      socket.username = name;
+      socket.color = color;
+      
   		// send 'others' joined message
-    	socket.broadcast.emit('joinResponse', name);
+    	socket.broadcast.emit('joinResponse', socket.username, socket.color);
       // give user acces
-      io.to(socketId).emit('access');
+      io.to(socket.id).emit('access', socket.username, socket.color);
     	// globally update userlist
-    	io.emit("updateUserList", users);
+    	io.emit("updateUserCount", usernames.length);
+      console.log(usernames);
+
   	}   
-  });
-
-  // on a username value request
-  socket.on('usernameRequest', function() {
-    // set user data of this specific user/socket
-    var socketId = socket.id;
-    var currentUsername = users[socketId];
-
-    io.to(socketId).emit('usernameResponse', currentUsername);
   });
 
 	// on a chat message
   socket.on('messageRequest', function(msg) {
-    // set user data of this specific user/socket
-    var socketId = socket.id;
-  	var currentUsername = users[socketId];
 
     // send 'others' the message .. the users own message gets appended locally
     socket.broadcast.emit('messageResponse', {
-    	username: currentUsername,
-    	message: msg
+    	username: socket.username,
+    	message: msg,
+      color: socket.color
     });
 
   });
 
   // on disconnect
   socket.on('disconnect', function() {
-    // set user data of this specific user/socket
-    var socketId = socket.id;
-    var currentUsername = users[socketId];
 
     // only if it was a joined user
-  	if (currentUsername) {
+  	if (socket.username) {
       // globally send username that left 
-  		io.emit('left', currentUsername);
-      // remove user from storage
-      delete users[socketId];
+  		io.emit('left', socket.username, socket.color);
+      // remove user from array
+      removeFromArray(usernames, socket.username);
       // globally update userlist
-	    io.emit("updateUserList", users);
+	    io.emit("updateUserCount", usernames.length);
+
+      console.log(usernames);
   	}
   	
   });
@@ -128,15 +123,13 @@ function containsSymbol(val) {
 }
 
 // check if a value is inside an ibject
-function usernameTaken(obj, val) {
-	for(var prop in obj) {
-    if(obj.hasOwnProperty(prop)) {
-      if(obj[prop].toLowerCase() === val.toLowerCase()) {
-          return true;
-      }
+function usernameTaken(array, val) {
+	for (var i = array.length - 1; i >= 0; i--) {
+    if (array[i].toLowerCase() == val.toLowerCase()) {
+      return true;
     }
-	}
-	return false;
+  }
+  return false;
 }
 
 function logArray(array) {
@@ -144,6 +137,24 @@ function logArray(array) {
 	for(var i = 0; i < array.length; i++) {
 		console.log(i + ': ' + array[i]);
 	}
+}
+
+function randomColor() {
+  var name = ['orange', 'wine-red', 'bright-red', 'red', 'purple', 'light-blue', 'blue', 'green', 'dark-green', 'pink', 'teal', 'marine' ];
+  var color = ['#FAA916', '#96031A', '#F64740', '#FF3F3F', '#6F2DBD', '#3F88C5', '#00349E', '#06A77D', '#005B15', '#FF7AE0', '#1282A2', '#254441'];
+  var rand = Math.floor((Math.random() * color.length) + 1);
+  return color[rand];
+}
+
+function removeFromArray(arr) {
+    var what, a = arguments, L = a.length, ax;
+    while (L > 1 && arr.length) {
+        what = a[--L];
+        while ((ax= arr.indexOf(what)) !== -1) {
+            arr.splice(ax, 1);
+        }
+    }
+    return arr;
 }
 
 // catch 404 and forward to error handler

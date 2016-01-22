@@ -3,6 +3,7 @@ $(document).ready(function() {
   // socket.io
   var socket = io();
   var localUsername = '';
+  var localUsernameColor = '';
 
 
   /*
@@ -13,14 +14,10 @@ $(document).ready(function() {
   $('#name-form').submit(function(e) {
     e.preventDefault();
     
-
     // retrieve username from username input field
     var username = $('#name-input').val();
     // send a join request
     socket.emit('joinRequest', username);
-
-    // store the username for local use
-    localUsername = username;
     
     return false;
   });
@@ -41,7 +38,7 @@ $(document).ready(function() {
 
       // output the user message locally
       var now = $.format.date(new Date(), 'H:mm');
-      var output = '<div class="message-box clearfix"><div class="right-side"><div class="username">' + localUsername + '</div><div class="time"><small> ' + now + '</small></div><div class="message">' + message + '</div></div></div>';
+      var output = '<div class="message-box clearfix"><div class="right-side"><div class="username" style="color: ' + localUsernameColor + ';">' + localUsername + '</div><div class="time"><small> ' + now + '</small></div><div class="message">' + message + '</div></div></div>';
       $('#messages').append(output);
 
       // update the scoll position of messages box
@@ -66,10 +63,10 @@ $(document).ready(function() {
 
 
   // when a user joined
-  socket.on('joinResponse', function(username) {
+  socket.on('joinResponse', function(username, color) {
 
     // output a 'user joined' notice
-    var output = '<div class="message-box notice clearfix"><div class="left-side"><div class="message joined">' + username + ' joined.</div></div></div>';
+    var output = '<div class="message-box notice clearfix"><div class="left-side"><div class="message joined"><span style="color:' + color + ';font-weight:bold;">' + username + '</span> joined.</div></div></div>';
     $('#messages').append(output);
 
     // update the scoll position of messages box
@@ -78,7 +75,11 @@ $(document).ready(function() {
 
 
   // Allow this user acces
-  socket.on('access', function() {
+  socket.on('access', function(username, color) {
+
+    // store local user info
+    localUsername = username;
+    localUsernameColor = color;
 
     // remove the welcome box
     $('.name-box-window').fadeOut(200).remove();
@@ -92,7 +93,7 @@ $(document).ready(function() {
 
     // output the message
     var now = $.format.date(new Date(), 'H:mm');
-    var output = '<div class="message-box clearfix"><div class="left-side"><div class="username">' + data.username + ' </div><div class="time"><small> ' + now + '</small></div><div class="message">' + data.message + '</div></div></div>';
+    var output = '<div class="message-box clearfix"><div class="left-side"><div class="username" style="color:' + data.color + ';">' + data.username + ' </div><div class="time"><small> ' + now + '</small></div><div class="message">' + data.message + '</div></div></div>';
     $('#messages').append(output);
 
     // update the scoll position of messages box
@@ -100,32 +101,17 @@ $(document).ready(function() {
   });
 
 
-  // update userlist
-  socket.on('updateUserList', function(users) {
-
-    // for debugging 
-    //console.log(users);
-    //console.log(Object.size(users));
-
-    // for a future user list
-    // $("#user-list").empty();
-    // var userAmount = 0;
-    // $.each(users, function(id, username) {
-    //     $('#user-list').append('<li class="user" id="' + username + '"><i class="fa fa-user"></i> ' + username + '</li>');
-    //     userAmount++;
-    // });
-
-    // update the amount of users connected
-    var userAmount = Object.size(users);
-    $('#amount-in-chat').html('<p>in chat: ' + userAmount + ' </p>');
+  // update usercount
+  socket.on('updateUserCount', function(userCount) {
+    $('#amount-in-chat').html('<p>in chat: ' + userCount + ' </p>');
   });
 
 
   // on user disconnect
-  socket.on('left', function(username) {
+  socket.on('left', function(username, color) {
 
     // output 'user left' notice
-    output = '<div class="message-box notice clearfix"><div class="left-side"><div class="message left">' + username + ' has left.</div></div></div>';
+    output = '<div class="message-box notice clearfix"><div class="left-side"><div class="message left"><span style="color:' + color + ';font-weight:bold;">' + username + '</span> has left.</div></div></div>';
     $('#messages').append(output);
 
     // update the scoll position of messages box
