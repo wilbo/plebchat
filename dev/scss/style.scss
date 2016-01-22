@@ -255,6 +255,7 @@ blockquote {
 	left: 0;
 	z-index: 100;
 	background-color: rgba(0,0,0,0.8);
+	//position: relative;
 		#name-box {
 		display: inline-block;
 		width: 100%;
@@ -275,16 +276,19 @@ blockquote {
 				margin: 0 auto;
 			}
 		}
-		label {
-			display: block;
-			padding-bottom: 20px;
-			text-align: center;
+		form {
+			width: 100%;
+			margin: 0;
+			position: fixed;
+			bottom:0;
+			background-color: $white;
+			input {
+				border: 0;
+				border-bottom: 1px solid $gray;
+				border-radius: 0;
+			}
 		}
-		input {
-			border: 0;
-			border-bottom: 1px solid $gray;
-			border-radius: 0;
-		}
+		
 		#name-error {
 			color: #FF633D;
 		}
@@ -408,6 +412,9 @@ blockquote {
 		left: 50%;
 		transform: translate(-50%, -50%);
 		border-radius: $border-radius;
+		form#name-form {
+			position: initial;
+		}
 	}
 
 	#made-by {
@@ -415,4 +422,38 @@ blockquote {
 	}
 
 
+}
+
+
+
+selector:-webkit-full-screen {
+  display: block; // displays the element only when in fullscreen
+}
+
+selector {
+  display: none; // hides the element when not in fullscreen mode
+}
+
+selector:-moz-full-screen {
+  display: block; // hides the element when not in fullscreen mode
+}
+
+selector {
+  display: none; // hides the element when not in fullscreen mode
+}
+
+selector:-ms-fullscreen {
+  display: block;
+}
+
+selector {
+  display: none; // hides the element when not in fullscreen mode
+}
+
+selector:fullscreen {
+  display: block;
+}
+
+selector {
+  display: none; // hides the element when not in fullscreen mode
 }

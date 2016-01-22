@@ -142,7 +142,7 @@ function logArray(array) {
 function randomColor() {
   var name = ['orange', 'wine-red', 'bright-red', 'red', 'purple', 'light-blue', 'blue', 'green', 'dark-green', 'pink', 'teal', 'marine' ];
   var color = ['#FAA916', '#96031A', '#F64740', '#FF3F3F', '#6F2DBD', '#3F88C5', '#00349E', '#06A77D', '#005B15', '#FF7AE0', '#1282A2', '#254441'];
-  var rand = Math.floor((Math.random() * color.length) + 1);
+  var rand = Math.floor((Math.random() * color.length));
   return color[rand];
 }
 

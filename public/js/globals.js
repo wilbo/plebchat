@@ -5,6 +5,9 @@ $(document).ready(function() {
   var localUsername = '';
   var localUsernameColor = '';
 
+  // trying to hide the adress bar in chrome mobile
+  window.scrollTo(0,1);
+
 
   /*
     Requests
