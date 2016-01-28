@@ -23,12 +23,6 @@ app.get('/', function (req, res) {
   res.render('index.html');
 });
 
-// redirect al other urls than '/'
-app.use(redirectUnmatched);
-function redirectUnmatched(req, res) {
-  res.redirect("http://plebchat.wilbo.io");
-}
-
 
 /*
 	Socket io stuff
@@ -164,6 +158,6 @@ app.use(function(req, res, next) {
   next();
 });
 
-server.listen(3000, function() {
-  console.log('listening on *:3000');
+server.listen(3002, function() {
+  console.log('listening on *:3002');
 });
