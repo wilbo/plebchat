@@ -23,7 +23,6 @@ app.get('/', function (req, res) {
   res.render('index.html');
 });
 
-
 /*
 	Socket io stuff
 */
@@ -54,7 +53,7 @@ io.on('connection', function(socket) {
       var color = randomColor();
       socket.username = name;
       socket.color = color;
-      
+
   		// send 'others' joined message
     	socket.broadcast.emit('joinResponse', socket.username, socket.color);
       // give user acces
@@ -63,7 +62,7 @@ io.on('connection', function(socket) {
     	io.emit("updateUserCount", usernames.length);
       console.log(usernames);
 
-  	}   
+  	}
   });
 
 	// on a chat message
@@ -83,7 +82,7 @@ io.on('connection', function(socket) {
 
     // only if it was a joined user
   	if (socket.username) {
-      // globally send username that left 
+      // globally send username that left
   		io.emit('left', socket.username, socket.color);
       // remove user from array
       removeFromArray(usernames, socket.username);
@@ -92,10 +91,10 @@ io.on('connection', function(socket) {
 
       console.log(usernames);
   	}
-  	
+
   });
 
- 
+
 });
 
 /*
