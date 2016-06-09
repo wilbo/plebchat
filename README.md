@@ -7,8 +7,8 @@ Project: [plebchat.wilbo.io](http://plebchat.wilbo.io). <br>
 
 If you are in a developing mood, fire it up locally by doing:
 
-    $ git clone https://github.com/wilbo/duodoodle.git
-    $ cd duodoodle
+    $ git clone https://github.com/wilbo/plebchat.git
+    $ cd plebchat
     $ npm install
-    $ npm start
+    $ node app.js
     browse to localhost:3002
